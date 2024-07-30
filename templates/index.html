@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telco Customer Churn Prediction</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <link rel="stylesheet" href="static/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Telco Customer Churn Prediction</h2>
+        <p>Predict whether a customer will churn based on their demographics, service usage, and billing information.</p>
+        <form action="/predict" method="post" id="churnForm">
+            <div class="form-row">
+                <div class="form-column">
+                    <h3>Customer Demographics</h3>
+                    <label for="gender">Gender:</label>
+                    <select id="gender" name="gender" required>
+                        <option disable selected value>-- select --</option>
+                        <option value="Male" {% if request.form.gender == 'Male' %}selected{% endif %}>Male</option>
+                        <option value="Female" {% if request.form.gender == 'Female' %}selected{% endif %}>Female</option>
+                    </select>
+
+                    <label for="SeniorCitizen">Senior Citizen:</label>
+                    <select id="SeniorCitizen" name="SeniorCitizen" required>
+                        <option disable selected value>-- select --</option>
+                        <option value="Yes" {% if request.form.SeniorCitizen == 'Yes' %}selected{% endif %}>Yes</option>
+                        <option value="No" {% if request.form.SeniorCitizen == 'No' %}selected{% endif %}>No</option>
+                    </select>
+
+                    <label for="Partner">Partner:</label>
+                    <select id="Partner" name="Partner" required>
+                        <option disable selected value>-- select --</option>
+                        <option value="Yes" {% if request.form.Partner == 'Yes' %}selected{% endif %}>Yes</option>
+                        <option value="No" {% if request.form.Partner == 'No' %}selected{% endif %}>No</option>
+                    </select>
+
+                    <label for="Dependents">Dependents:</label>
+                    <select id="Dependents" name="Dependents" required>
+                        <option disable selected value>-- select --</option>
+                        <option value="Yes" {% if request.form.Dependents == 'Yes' %}selected{% endif %}>Yes</option>
+                        <option value="No" {% if request.form.Dependents == 'No' %}selected{% endif %}>No</option>
+                    </select>
+
+                    <label for="tenure">Tenure:</label>
+                    <input type="number" id="tenure" name="tenure" value="{{ request.form.tenure }}" required>
+
+                    <h3>Billing Info</h3>
+                    <label for="Contract">Contract:</label>
+                    <select id="Contract" name="Contract" required>
+                        <option disable selected value>-- select --</option>
+                        <option value="Month-to-month" {% if request.form.Contract == 'Month-to-month' %}selected{% endif %}>Month-to-Month</option>
+                        <option value="One year" {% if request.form.Contract == 'One year' %}selected{% endif %}>One Year</option>
+                        <option value="Two year" {% if request.form.Contract == 'Two year' %}selected{% endif %}>Two Year</option>
+                    </select>
+
+                    <label for="PaperlessBilling">Paperless Billing:</label>
+                    <select id="PaperlessBilling" name="PaperlessBilling" required>
+                        <option disable selected value>-- select --</option>
+                        <option value="Yes" {% if request.form.PaperlessBilling == 'Yes' %}selected{% endif %}>Yes</option>
+                        <option value="No" {% if request.form.PaperlessBilling == 'No' %}selected{% endif %}>No</option>
+                    </select>
+
+                    <label for="PaymentMethod">Payment Method:</label>
+                    <select id="PaymentMethod" name="PaymentMethod" required>
+                        <option disable selected value>-- select --</option>
+                        <option value="Electronic check" {% if request.form.PaymentMethod == 'Electronic check' %}selected{% endif %}>Electronic Check</option>
+                        <option value="Mailed check" {% if request.form.PaymentMethod == 'Mailed check' %}selected{% endif %}>Mailed Check</option>
+                        <option value="Bank transfer (automatic)" {% if request.form.PaymentMethod == 'Bank transfer (automatic)' %}selected{% endif %}>Bank Transfer (automatic)</option>
+                        <option value="Credit card (automatic)" {% if request.form.PaymentMethod == 'Credit card (automatic)' %}selected{% endif %}>Credit Card (automatic)</option>
+                    </select>
+
+                    <label for="MonthlyCharges">Monthly Charges:</label>
+                    <input type="number" id="MonthlyCharges" name="MonthlyCharges" step="0.01" value="{{ request.form.MonthlyCharges }}" required>
+
+                    <label for="TotalCharges">Total Charges:</label>
+                    <input type="number" id="TotalCharges" name="TotalCharges" step="0.01" value="{{ request.form.TotalCharges }}" required>
+                </div>
+                <div class="form-column">
+                    <h3>Services Used</h3>
+                    <label for="PhoneService">Phone Service:</label>
+                    <select id="PhoneService" name="PhoneService" required>
+                        <option disable selected value>-- select --</option>
+                        <option value="Yes" {% if request.form.PhoneService == 'Yes' %}selected{% endif %}>Yes</option>
+                        <option value="No" {% if request.form.PhoneService == 'No' %}selected{% endif %}>No</option>
+                    </select>
+
+                    <label for="MultipleLines">Multiple Lines:</label>
+                    <select id="MultipleLines" name="MultipleLines" required>
+                        <option disable selected value>-- select --</option>
+                        <option value="Yes" {% if request.form.MultipleLines == 'Yes' %}selected{% endif %}>Yes</option>
+                        <option value="No" {% if request.form.MultipleLines == 'No' %}selected{% endif %}>No</option>
+                    </select>
+
+                    <label for="InternetService">Internet Service:</label>
+                    <select id="InternetService" name="InternetService" required>
+                        <option disable selected value>-- select --</option>
+                        <option value="DSL" {% if request.form.InternetService == 'DSL' %}selected{% endif %}>DSL</option>
+                        <option value="Fiber optic" {% if request.form.InternetService == 'Fiber optic' %}selected{% endif %}>Fiber Optic</option>
+                        <option value="No" {% if request.form.InternetService == 'No' %}selected{% endif %}>No Service</option>
+                    </select>
+
+                    <label for="OnlineSecurity">Online Security:</label>
+                    <select id="OnlineSecurity" name="OnlineSecurity" required>
+                        <option disable selected value>-- select --</option>
+                        <option value="Yes" {% if request.form.OnlineSecurity == 'Yes' %}selected{% endif %}>Yes</option>
+                        <option value="No" {% if request.form.OnlineSecurity == 'No' %}selected{% endif %}>No</option>
+                    </select>
+
+                    <label for="OnlineBackup">Online Backup:</label>
+                    <select id="OnlineBackup" name="OnlineBackup" required>
+                        <option disable selected value>-- select --</option>
+                        <option value="Yes" {% if request.form.OnlineBackup == 'Yes' %}selected{% endif %}>Yes</option>
+                        <option value="No" {% if request.form.OnlineBackup == 'No' %}selected{% endif %}>No</option>
+                    </select>
+
+                    <label for="DeviceProtection">Device Protection:</label>
+                    <select id="DeviceProtection" name="DeviceProtection" required>
+                        <option disable selected value>-- select --</option>
+                        <option value="Yes" {% if request.form.DeviceProtection == 'Yes' %}selected{% endif %}>Yes</option>
+                        <option value="No" {% if request.form.DeviceProtection == 'No' %}selected{% endif %}>No</option>
+                    </select>
+
+                    <label for="TechSupport">Tech Support:</label>
+                    <select id="TechSupport" name="TechSupport" required>
+                        <option disable selected value>-- select --</option>
+                        <option value="Yes" {% if request.form.TechSupport == 'Yes' %}selected{% endif %}>Yes</option>
+                        <option value="No" {% if request.form.TechSupport == 'No' %}selected{% endif %}>No</option>
+                    </select>
+
+                    <label for="StreamingTV">Streaming TV:</label>
+                    <select id="StreamingTV" name="StreamingTV" required>
+                        <option disable selected value>-- select --</option>
+                        <option value="Yes" {% if request.form.StreamingTV == 'Yes' %}selected{% endif %}>Yes</option>
+                        <option value="No" {% if request.form.StreamingTV == 'No' %}selected{% endif %}>No</option>
+                    </select>
+
+                    <label for="StreamingMovies">Streaming Movies:</label>
+                    <select id="StreamingMovies" name="StreamingMovies" required>
+                        <option disable selected value>-- select --</option>
+                        <option value="Yes" {% if request.form.StreamingMovies == 'Yes' %}selected{% endif %}>Yes</option>
+                        <option value="No" {% if request.form.StreamingMovies == 'No' %}selected{% endif %}>No</option>
+                    </select>
+                </div>
+            </div>
+            <input type="submit" value="Predict" class="btn btn-primary">
+        </form>
+        <div id="predictionResult">
+        {% if maind.predictions %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Model</th>
+                    <th>Prediction</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in maind.predictions %}
+                <tr>
+                    <td>{{ result.model }}</td>
+                    <td>{{ result.prediction }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // Autofill logic for Phone Service and Multiple Lines
+            $("#PhoneService").change(function () {
+                if ($(this).val() === "No") {
+                    $("#MultipleLines").val("No");
+                }
+            });
+
+            // Autofill logic for Internet Service and related fields
+            $("#InternetService").change(function () {
+                if ($(this).val() === "No") {
+                    $("#OnlineSecurity").val("No");
+                    $("#OnlineBackup").val("No");
+                    $("#DeviceProtection").val("No");
+                    $("#TechSupport").val("No");
+                    $("#StreamingTV").val("No");
+                    $("#StreamingMovies").val("No");
+                }
+            });
+
+            // Form validation
+            $("#churnForm").on("submit", function (e) {
+                var tenure = parseInt($("#tenure").val());
+                var monthlyCharges = parseFloat($("#MonthlyCharges").val());
+                var totalCharges = parseFloat($("#TotalCharges").val());
+                if (tenure < 0){
+                    e.preventDefault();
+                    alert("Tenure can't be negative.");
+                }
+                if (monthlyCharges < 0){
+                    e.preventDefault();
+                    alert("Monthly Charges can't be negative.");
+                }
+                if (totalCharges < 0){
+                    e.preventDefault();
+                    alert("Total Charges can't be negative.");
+                }
+                if (totalCharges < monthlyCharges) {
+                    e.preventDefault();
+                    alert("Total Charges can't be less than Monthly Charges.");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
