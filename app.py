@@ -94,7 +94,7 @@ def home():
 @app.route('/predict', methods=['POST'])
 def predict():
     form_data = request.form.to_dict()
-    new_array = form_to_numeric(form_data)
+    c_data = form_to_numeric(form_data)
 
     # Key names for customer dictionary 
     cols = ['SeniorCitizen', 'Partner', 'Dependents', 'tenure', 'PhoneService', 'MultipleLines',
@@ -107,11 +107,11 @@ def predict():
             'gender_Female', 'gender_Male']
     
     custard = {}
-    for k, v in zip(cols, new_array[0]):
+    for k, v in zip(cols, c_data[0]):
         custard[k] = v
 
     # Make predictions
-    predl = [show_pred(m.predict(new_array)[0]) for m in models_dict.values()]
+    predl = [show_pred(m.predict(c_data)[0]) for m in models_dict.values()]
 
     result = [
             {'model':'Voting Classifier', 'prediction':predl[0]},
@@ -130,10 +130,10 @@ def predict():
 @app.route('/api/predict', methods=['POST'])
 def api_predict():
     data = request.json
-    new_array = form_to_numeric(data)
+    data = form_to_numeric(data)
 
     # Make precictions
-    predl = {model_name: show_pred(model.predict(new_array)[0]) for model_name, model in models_dict.items()}
+    predl = {model_name: show_pred(model.predict(data)[0]) for model_name, model in models_dict.items()}
 
     return jsonify(predl)
 
