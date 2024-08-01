@@ -1,2 +1,2 @@
 # 10Pearls-DataScience-FlaskApp
-This is the Flask Application for the 10Pearls Data Science Internship related to Customer Churn Prediction
+This is the Flask Application for the 10Pearls Data Science Internship related to Customer Churn Prediction. The deployed app can be accessed here [https://churn-predictor-10p-552a02dcfdbb.herokuapp.com/](https://churn-predictor-10p-552a02dcfdbb.herokuapp.com/)
