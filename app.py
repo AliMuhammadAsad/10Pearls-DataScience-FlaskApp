@@ -6,7 +6,7 @@ app = Flask(__name__)
 # Load the saved models
 logreg = joblib.load('ml_models/logistic_regression_tuned_model.pkl')
 dtree = joblib.load('ml_models/decision_tree_tuned_model.pkl')
-rf = joblib.load('ml_models/random_forest_tuned_model.pkl')
+rf = joblib.load('ml_models/random_forest_model.pkl')
 gboost = joblib.load('ml_models/gradient_boosting_tuned_model.pkl')
 svm = joblib.load('ml_models/support_vector_machine_model.pkl')
 xgb = joblib.load('ml_models/xgboost_tuned_model.pkl')
@@ -15,8 +15,8 @@ vcl = joblib.load('ml_models/voting_classifier_model.pkl')
 # Dictionary of loaded models
 models_dict = {
     'vcl': vcl,
-    'xgb': xgb,
     'rf': rf,
+    'xgb': xgb,
     'gboost': gboost,
     'logreg': logreg,
     'dtree': dtree,
